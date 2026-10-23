@@ -23,8 +23,17 @@ con = duckdb.connect(database=':memory:')
 # Фильтрация по status = 'ERROR', группировка по device_id, агрегаты: count(*) и avg(metric_value)
 # Добавьте HAVING по количеству ошибок > 5, сортировку по убыванию и LIMIT 10.
 
-query = """
-SELECT 1 as device_id, 1 as error_count, 1.0 as avg_error_value; -- Замените своим SQL запросом
+query = f"""
+SELECT
+    device_id,
+    count(*) AS error_count,
+    avg(metric_value) AS avg_error_value
+FROM read_csv_auto('{csv_path}')
+WHERE status = 'ERROR'
+GROUP BY device_id
+HAVING count(*) > 5
+ORDER BY error_count DESC
+LIMIT 10
 """
 
 print("=== ФИЗИЧЕСКИЙ ПЛАН ВЫПОЛНЕНИЯ ===")
