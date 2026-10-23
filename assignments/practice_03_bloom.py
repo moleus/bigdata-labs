@@ -23,12 +23,25 @@ class BloomFilter:
 
     def add(self, item: str) -> None: # Добавлено -> None
         # Реализуйте установку битов в 1 с помощью побитовых масок и сдвигов
-        pass
+        for index in self._get_hashes(item):
+            self.bit_array[index // 8] |= 1 << (index % 8)
 
     def contains(self, item: str) -> bool: # Добавлено -> bool
         # Реализуйте проверку наличия битов. Верните False, если встречен 0.
+        for index in self._get_hashes(item):
+            if not self.bit_array[index // 8] & (1 << (index % 8)):
+                return False
         return True
 
 bf = BloomFilter(5000, 0.01)
 bf.add("test_session_1")
 print(f"Тест добавления сессии: {bf.contains('test_session_1')}")
+
+# Заполняем фильтр до расчётного объёма и проверяем ложные срабатывания на новых ключах
+for i in range(bf.n):
+    bf.add(f"session_{i}")
+false_negatives = sum(not bf.contains(f"session_{i}") for i in range(bf.n))
+trials = 20000
+false_positives = sum(bf.contains(f"unknown_{i}") for i in range(trials))
+print(f"Ложные отрицания: {false_negatives}")
+print(f"Доля ложных срабатываний: {false_positives / trials:.4f} (заданная p = {bf.p})")
