@@ -1,6 +1,6 @@
 # Практика 2: Инкрементальное Бета-Бернулли сопряжение
 import numpy as np
-from scipy.stats import beta # noqa: F401
+from scipy.stats import beta
 
 TRUE_THETA: float = 0.035  
 CHUNK_SIZE: int = 10000
@@ -21,8 +21,8 @@ for step in range(STEPS):
     alpha_post += successes
     beta_post += failures
     # 3. Рассчитайте границы 95% HDI интервала с помощью квантилей beta.ppf
-    ci_low = 0.0
-    ci_high = 0.0
+    ci_low = beta.ppf(0.025, alpha_post, beta_post)
+    ci_high = beta.ppf(0.975, alpha_post, beta_post)
     
     if (step + 1) % 10 == 0:
         mean_est = alpha_post / (alpha_post + beta_post)
