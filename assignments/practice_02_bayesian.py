@@ -15,11 +15,11 @@ for step in range(STEPS):
     
     # --- СТУДЕНТ ДОЛЖЕН НАПИСАТЬ КОД НИЖЕ ---
     # 1. Рассчитайте успехи и неудачи в stream_data БЕЗ циклов for.
-    successes = 0 
-    failures = 0
+    successes = int(stream_data.sum())
+    failures = CHUNK_SIZE - successes
     # 2. Обновите параметры alpha_post и beta_post.
-    alpha_post += 0
-    beta_post += 0
+    alpha_post += successes
+    beta_post += failures
     # 3. Рассчитайте границы 95% HDI интервала с помощью квантилей beta.ppf
     ci_low = 0.0
     ci_high = 0.0
