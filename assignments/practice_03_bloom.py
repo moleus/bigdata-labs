@@ -8,8 +8,8 @@ class BloomFilter:
         self.p: float = false_positive_rate
         # --- СТУДЕНТ ДОЛЖЕН НАПИСАТЬ КОД НИЖЕ ---
         # Рассчитайте оптимальные m (self.m) и k (self.k) по формулам из лекции
-        self.m: int = 1000  
-        self.k: int = 3     
+        self.m: int = math.ceil(-self.n * math.log(self.p) / math.log(2) ** 2)
+        self.k: int = max(1, round(self.m / self.n * math.log(2)))
         
         self.bit_array: bytearray = bytearray(math.ceil(self.m / 8))
         print(f"Инициализирован фильтр Блума: m={self.m}, k={self.k}")
